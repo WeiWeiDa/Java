@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="error" monitorInterval="3600">
+    <properties>
+        <property name="log_home">${mvn.log.path}</property>
+        <property name="patternLayout">[%X{tid}.%X{fromapp}] %d [%t] %-5p [%c] [%L] - %m%n</property>
+
+        <property name="root.log.level">${mvn.log.level}</property>
+        <property name="log.other.level">${mvn.log.other.level}</property>
+    </properties>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout charset="UTF-8" pattern="${patternLayout}"/>
+        </Console>
+        <RollingRandomAccessFile name="rollingFileGlobal" fileName="${log_home}code-global.log"
+                                 filePattern="${log_home}code-global-%i.log">
+            <PatternLayout charset="UTF-8" pattern="${patternLayout}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="1GB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="5"/>
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile name="rollingFile" fileName="${log_home}code-main.log"
+                                 filePattern="${log_home}code-main-%i.log">
+            <PatternLayout charset="UTF-8" pattern="${patternLayout}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="1GB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="5"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="${root.log.level}" name="global" includeLocation="true">
+            <AppenderRef ref="rollingFileGlobal"/>
+        </Root>
+        <AsyncLogger name="com.code" level="${log.other.level}" additivity="false" includeLocation="true">
+            <AppenderRef ref="rollingFile"/>
+        </AsyncLogger>
+        <AsyncLogger name="com.mybatis" level="${root.log.level}" additivity="false" includeLocation="true">
+            <AppenderRef ref="rollingFile"/>
+        </AsyncLogger>
+        <AsyncLogger name="java.sql.Connection" level="${root.log.level}" additivity="false" includeLocation="true">
+            <AppenderRef ref="rollingFile"/>
+        </AsyncLogger>
+        <AsyncLogger name="java.sql.PreparedStatement" level="${root.log.level}" additivity="false"
+                     includeLocation="true">
+            <AppenderRef ref="rollingFile"/>
+        </AsyncLogger>
+    </Loggers>
+</Configuration>
