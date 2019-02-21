@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+       default-lazy-init="false" default-autowire="byName">
+    <!-- scan for mappers and let them be autowired -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.code.**.dao"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:spring/mybatis-config.xml"/>
+    </bean>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.mysql.driver}"/>
+        <property name="url" value="${jdbc.mysql.url}"/>
+        <property name="username" value="${jdbc.mysql.username}"/>
+        <property name="password" value="${jdbc.mysql.password}"/>
+        <property name="connectionProperties" value="${jdbc.mysql.connectionProperties}"/>
+
+        <property name="initialSize" value="${dbcp.initialSize}"/>
+        <property name="maxActive" value="${dbcp.maxActive}"/>
+        <property name="maxIdle" value="${dbcp.maxIdle}"/>
+        <property name="minIdle" value="${dbcp.minIdle}"/>
+        <property name="maxWait" value="${dbcp.maxWait}"/>
+        <property name="defaultAutoCommit" value="${dbcp.defaultAutoCommit}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${dbcp.timeBetweenEvictionRunsMillis}"/>
+        <property name="numTestsPerEvictionRun" value="${dbcp.numTestsPerEvictionRun}"/>
+        <property name="minEvictableIdleTimeMillis" value="${dbcp.minEvictableIdleTimeMillis}"/>
+        <property name="testWhileIdle" value="${dbcp.testWhileIdle}"/>
+        <property name="testOnBorrow" value="${dbcp.testOnBorrow}"/>
+        <property name="testOnReturn" value="${dbcp.testOnReturn}"/>
+        <property name="validationQuery" value="${dbcp.validationQuery}"/>
+        <property name="removeAbandoned" value="${dbcp.removeAbandoned}"/>
+        <property name="removeAbandonedTimeout" value="${dbcp.removeAbandonedTimeout}"/>
+        <property name="logAbandoned" value="${dbcp.logAbandoned}"/>
+    </bean>
+
+    <!--事务管理-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!-- 扫描事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.jd.eclp.master.goods.shopstock"/>
+        <property name="sqlSessionFactory" ref="otherSessionFactory"/>
+    </bean>
+
+    <bean id="otherSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="otherDataSource"/>
+        <property name="configLocation" value="classpath:spring/mybatis-config-other.xml"/>
+    </bean>
+
+    <bean id="otherDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.mysql.driver}"/>
+        <property name="url" value="${jdbc.mysql.url.other}"/>
+        <property name="username" value="${jdbc.mysql.username.other}"/>
+        <property name="password" value="${jdbc.mysql.password.other}"/>
+        <property name="connectionProperties" value="${jdbc.mysql.connectionProperties}"/>
+
+        <property name="initialSize" value="${dbcp.initialSize}"/>
+        <property name="maxActive" value="${dbcp.maxActive}"/>
+        <property name="maxIdle" value="${dbcp.maxIdle}"/>
+        <property name="minIdle" value="${dbcp.minIdle}"/>
+        <property name="maxWait" value="${dbcp.maxWait}"/>
+        <property name="defaultAutoCommit" value="${dbcp.defaultAutoCommit}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${dbcp.timeBetweenEvictionRunsMillis}"/>
+        <property name="numTestsPerEvictionRun" value="${dbcp.numTestsPerEvictionRun}"/>
+        <property name="minEvictableIdleTimeMillis" value="${dbcp.minEvictableIdleTimeMillis}"/>
+        <property name="testWhileIdle" value="${dbcp.testWhileIdle}"/>
+        <property name="testOnBorrow" value="${dbcp.testOnBorrow}"/>
+        <property name="testOnReturn" value="${dbcp.testOnReturn}"/>
+        <property name="validationQuery" value="${dbcp.validationQuery}"/>
+        <property name="removeAbandoned" value="${dbcp.removeAbandoned}"/>
+        <property name="removeAbandonedTimeout" value="${dbcp.removeAbandonedTimeout}"/>
+        <property name="logAbandoned" value="${dbcp.logAbandoned}"/>
+    </bean>
+
+    <!--事务管理-->
+    <bean id="otherTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="otherDataSource"/>
+    </bean>
+    <!-- 扫描事务 -->
+    <tx:annotation-driven transaction-manager="otherTransactionManager"/>
+
+</beans>
